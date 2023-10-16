@@ -31,7 +31,7 @@ function Login() {
     try {
       e.preventDefault();
       const response = await api.post('/login', formData);
-      localStorage.setItem('token', response.data.data);
+      await localStorage.setItem('token', response.data.data);
       navigate('/');
     } catch (error) {
       toast({

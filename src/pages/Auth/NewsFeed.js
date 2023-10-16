@@ -1,73 +1,88 @@
 // src/NewsFeed.js
 
 import React from 'react';
-import {
-  VStack,
-  Container,
-  Button,
-  Textarea,
-  useToast,
-  Box
-} from '@chakra-ui/react';
+import { VStack, Container, useToast } from '@chakra-ui/react';
 
 import { HeaderBar, Post } from '.';
+import api from '../../api/auth';
 
 function NewsFeed() {
-  const posts = [
-    {
-      author: 'User1',
-      content: 'This is my first post.',
-      comments: ['Nice post!', 'Keep it up!'],
-    },
-    {
-      author: 'User2',
-      content: 'Hello, world!',
-      comments: ['Welcome!', 'How are you?'],
-    },
-    // Add more posts with comments here
-  ];
-
-  // const [posts, setPosts] = React.useState([]);
-
-  // const { addPost } = useContext(AppContext);
-  const [postText, setPostText] = React.useState('');
   const toast = useToast();
-
-  const handleCreatePost = () => {
-    if (postText.trim() === '') {
-      toast({
-        title: 'Error',
-        description: 'Please enter a post text.',
-        status: 'error',
-        duration: 2000,
-        isClosable: true,
-      });
-      return;
-    }
-
-    // Add the post to your context or send it to an API
-    // addPost(postText);
-
-    // Reset the post text input
-    setPostText('');
-
-    toast({
-      title: 'Post Created',
-      description: 'Your post has been created.',
-      status: 'success',
-      duration: 2000,
-      isClosable: true,
-    });
-  };
+  const [posts, setPosts] = React.useState([]);
 
   const fetchPosts = async () => {
     try {
+      const res = await api.get('/post');
+      setPosts(res.data.data);
     } catch (error) {
       console.log(error);
     }
   };
+  React.useState(() => {
+    fetchPosts();
+  }, []);
 
-  React.useState(() => {}, []);
+  // const toggleLike = async (postId, liked) => {
+  //   try {
+  //     // console.log(posts);
+  //     // console.log(setPosts);
+  //     // return console.log(postId, liked);
+  //     // debugger
+  //     // const liked = await
+  //     if (liked) {
+  //       const res = await api.delete(`/like/${postId}`, {});
+
+  //       setPosts(prev => {
+  //         const newPost = [...prev];
+  //         const index = prev.findIndex(p => p.id === postId);
+  //         newPost[index].current_user_liked = !liked;
+  //         return newPost;
+  //       });
+  //     } else {
+  //       const res = await api.create(`/like/${postId}`);
+  //       setPosts(prev => {
+  //         const newPost = [...prev];
+  //         const index = prev.findIndex(p => p.id === postId);
+  //         newPost[index].current_user_liked = !liked;
+  //         return newPost;
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast({
+  //       title: 'Error',
+  //       description: error?.response?.data?.message,
+  //       status: 'error',
+  //       duration: 1000,
+  //       isClosable: true,
+  //     });
+  //   }
+  // };
+
+  const deletePost = async id => {
+    try {
+      await api.delete(`/post/${id}`);
+      await setPosts(prev => {
+        return prev.filter(post => post.id !== id);
+      });
+       toast({
+        title: 'Success',
+        description: 'Deleted post ',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      });
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: 'Error',
+        description: error?.response?.data?.message,
+        status: 'error',
+        duration: 1000,
+        isClosable: true,
+      });
+    }
+  };
 
   return (
     <>
@@ -75,7 +90,13 @@ function NewsFeed() {
       <Container maxW="md" mt={10}>
         <VStack spacing={5} align="stretch" mt={10}>
           {posts.map((post, index) => (
-            <Post key={index} {...post} />
+            <Post
+              key={index}
+              {...post}
+              deletePost={deletePost}
+              // toggleLike={toggleLike}
+              setPosts={setPosts}
+            />
           ))}
         </VStack>
       </Container>

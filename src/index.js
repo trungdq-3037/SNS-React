@@ -16,7 +16,7 @@ root.render(
     <StrictMode>
       <ColorModeScript />
       <App />
-    </StrictMode>
+      </StrictMode>
   </Provider>
 );
 

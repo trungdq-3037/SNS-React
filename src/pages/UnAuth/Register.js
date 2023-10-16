@@ -29,7 +29,7 @@ function Register() {
 
             <FormControl isRequired>
               <FormLabel>Password</FormLabel>
-              <Input type="password" placeholder="Password" />
+            <Input type="password" placeholder="Password" />
             </FormControl>
 
             <Button colorScheme="teal" type="submit">

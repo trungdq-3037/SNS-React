@@ -8,16 +8,15 @@ import {
   FormLabel,
   Input,
   Stack,
-  Textarea,
   Container,
   useToast,
 } from '@chakra-ui/react';
 import { HeaderBar } from '.';
-// import api from "."
-
+import api from '../../api/auth';
 
 function EditProfile() {
   const toast = useToast();
+  const [currentUser, setCurrentUser] = React.useState({});
   const updateProfile = async e => {
     // const response = await api.post('/profile',{})
     try {
@@ -31,6 +30,21 @@ function EditProfile() {
       });
     } catch (error) {}
   };
+
+  const getCurrentUser = async () => {
+    try {
+      const current = await api.get('/user/current');
+      setCurrentUser(current?.data?.data);
+      console.log(current);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  React.useEffect(() => {
+    getCurrentUser();
+  }, []);
+
   return (
     <>
       <HeaderBar isHomePage={false} />
@@ -39,23 +53,28 @@ function EditProfile() {
           <form>
             <Stack spacing={4}>
               <FormControl isRequired>
-                <FormLabel>Name</FormLabel>
-                <Input type="text" placeholder="Your name"  />
+                <FormLabel>Id</FormLabel>
+                <Input type="text" placeholder={currentUser?.id} disabled />
               </FormControl>
 
               <FormControl isRequired>
                 <FormLabel>Email</FormLabel>
-                <Input type="email" name="email" placeholder="Your email" />
+                <Input
+                  type="email"
+                  name="email"
+                  placeholder={currentUser?.email}
+                  disabled
+                />
               </FormControl>
 
               <FormControl isRequired>
                 <FormLabel>Username</FormLabel>
-                <Input type="text" name="username" placeholder="Your username" />
+                <Input type="text" placeholder={currentUser?.username} />
               </FormControl>
 
-              <FormControl>
-                <FormLabel>Short Bio</FormLabel>
-                <Textarea placeholder="A brief description about yourself" />
+              <FormControl isRequired>
+                <FormLabel>Password</FormLabel>
+                <Input type="text" name="password_digest"/>
               </FormControl>
 
               <Button colorScheme="teal" type="submit" onClick={updateProfile}>
