@@ -9,14 +9,30 @@ import {
   Divider,
   Input,
   Button,
+  Icon,
 } from '@chakra-ui/react';
+import { DeleteIcon } from '@chakra-ui/icons';
 import { Comment } from '.';
+import { FaHeart } from 'react-icons/fa';
 
 function Post({ author, content, comments }) {
   return (
     <Box borderWidth="1px" p={4} mb={4} borderRadius="md">
-      <Text fontWeight="bold">{author}</Text>
-      <Text>{content}</Text>
+      <HStack  direction={['column', 'row']}>
+        <Box flex="1">
+          <Text fontWeight="bold">{author}</Text>
+          <Text>{content}</Text>
+        </Box>
+        <Box>
+          <Button
+            // leftIcon={<Icon as={FaTrash} />}
+            variant="outline"
+            colorScheme="teal"
+          >
+            <DeleteIcon />
+          </Button>
+        </Box>
+      </HStack>
 
       <Divider my={2} />
 
@@ -26,7 +42,10 @@ function Post({ author, content, comments }) {
         ))}
       </VStack>
 
-      <HStack mt={4}>
+      <HStack mt={5}>
+        <Button variant="outline" colorScheme="teal">
+          <Icon as={FaHeart} />
+        </Button>
         <Input placeholder="Add a comment" />
         <Button colorScheme="teal">Comment</Button>
       </HStack>
