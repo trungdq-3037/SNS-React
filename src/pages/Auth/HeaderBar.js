@@ -22,7 +22,6 @@ function HeaderBar({ isHomePage = true }) {
     try {
       const current = await api.get('/user/current');
       setUserName(current?.data?.data?.username);
-      console.log(current);
     } catch (error) {
       console.log(error);
     }

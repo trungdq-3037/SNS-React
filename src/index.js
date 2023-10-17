@@ -13,10 +13,10 @@ const root = ReactDOM.createRoot(container);
 
 root.render(
   <Provider store={store}>
-    <StrictMode>
+    {/* <StrictMode> */}
       <ColorModeScript />
       <App />
-      </StrictMode>
+      {/* </StrictMode> */}
   </Provider>
 );
 

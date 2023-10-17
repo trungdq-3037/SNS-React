@@ -26,7 +26,7 @@ function Post({
   count_comment,
   count_like,
   current_user_liked,
-  // toggleLike,
+  toggleLike,
   setPosts,
 }) {
   const toast = useToast();
@@ -91,48 +91,44 @@ function Post({
     }
   };
 
-  const toggleLike = async (postId, liked) => {
-    try {
-      // console.log(posts);
-      // console.log(setPosts);
-      // return
-      console.log(postId, liked);
-      // debugger
-      // const liked = await
-      if (liked) {
-        const res = await api.get("/");
+  // const toggleLike = async (postId, liked) => {
+  //   try {
+    
+  //     console.log(postId, liked);
+   
+  //     if (liked) {
+  //       await api.delete("/like/"+postId);
 
-        // setPosts(prev => {
-        //   const newPost = [...prev];
-        //   const index = prev.findIndex(p => p.id === postId);
-        //   newPost[index].current_user_liked = !liked;
-        //   return newPost;
-        // });
-      } else {
-        const res = await api.create(`/like/`,{
-          params:{
-            postId
-          }
-        });
-        // setPosts(prev => {
-        //   const newPost = [...prev];
-        //   const index = prev.findIndex(p => p.id === postId);
-        //   newPost[index].current_user_liked = !liked;
-        //   return newPost;
-        // });
-      }
-    } catch (error) {
-      console.log(error);
-      toast({
-        title: 'Error',
-        description: error?.response?.data?.message,
-        status: 'error',
-        duration: 1000,
-        isClosable: true,
-      });
-    }
-  };
-
+  //       setPosts(prev => {
+  //         const newPost = [...prev];
+  //         const index = prev.findIndex(p => p.id === postId);
+  //         newPost[index].current_user_liked = false;
+  //         newPost[index].count_like = newPost[index].count_like - 1;
+  //         console.log(newPost);
+  //         return newPost;
+  //       });
+  //     } else {
+  //       await api.post('/like/' + postId);
+  //       setPosts(prev => {
+  //         const newPost = [...prev];
+  //         const index = prev.findIndex(p => p.id === postId);
+  //         newPost[index].current_user_liked = true;
+  //         newPost[index].count_like = newPost[index].count_like +1;
+  //         return newPost;
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast({
+  //       title: 'Error',
+  //       description: error?.response?.data?.message,
+  //       status: 'error',
+  //       duration: 1000,
+  //       isClosable: true,
+  //     });
+  //   }
+  // };
+  console.log("post render")
   return (
     <Box borderWidth="1px" p={4} mb={4} borderRadius="md">
       <HStack direction={['column', 'row']}>
@@ -141,7 +137,7 @@ function Post({
           <Text>{content}</Text>
 
           <Text fontSize={13} fontStyle="italic">
-            Like: {count_like}, comments: {count_comment}
+            Like: {count_like}, comments: {listComment.length}
           </Text>
         </Box>
         <Box>
@@ -172,6 +168,7 @@ function Post({
       <HStack mt={5}>
         <Button
           onClick={() => {
+            // console.log("call toggle")
             toggleLike(id, current_user_liked);
           }}
           variant={current_user_liked ? 'outline' : ''}
@@ -192,4 +189,4 @@ function Post({
   );
 }
 
-export default Post;
+export default React.memo(Post);

@@ -22,50 +22,68 @@ function NewsFeed() {
     fetchPosts();
   }, []);
 
-  // const toggleLike = async (postId, liked) => {
-  //   try {
-  //     // console.log(posts);
-  //     // console.log(setPosts);
-  //     // return console.log(postId, liked);
-  //     // debugger
-  //     // const liked = await
-  //     if (liked) {
-  //       const res = await api.delete(`/like/${postId}`, {});
+  const toggleLike = React.useCallback(async (postId, liked) => {
+    try {
+      console.log(postId, liked);
 
-  //       setPosts(prev => {
-  //         const newPost = [...prev];
-  //         const index = prev.findIndex(p => p.id === postId);
-  //         newPost[index].current_user_liked = !liked;
-  //         return newPost;
-  //       });
-  //     } else {
-  //       const res = await api.create(`/like/${postId}`);
-  //       setPosts(prev => {
-  //         const newPost = [...prev];
-  //         const index = prev.findIndex(p => p.id === postId);
-  //         newPost[index].current_user_liked = !liked;
-  //         return newPost;
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast({
-  //       title: 'Error',
-  //       description: error?.response?.data?.message,
-  //       status: 'error',
-  //       duration: 1000,
-  //       isClosable: true,
-  //     });
-  //   }
-  // };
+      if (liked) {
+        // await api.delete('/like/' + postId);
+        // const newPost = [...posts];
+        // const index = newPost.findIndex(p => p.id === postId);
+        // newPost[index].current_user_liked = false;
+        // newPost[index].count_like -= 1;
+        // setPosts(newPost);
 
-  const deletePost = async id => {
+        setPosts(prev => {
+          console.log('start');
+          const newPost = [...prev];
+          const index = newPost.findIndex(p => p.id === postId);
+          newPost[index].current_user_liked = false;
+          console.log('newPost[index].count_like ', newPost[index].count_like);
+          newPost[index].count_like = newPost[index].count_like - 1;
+          console.log('newPost[index].count_like ', newPost[index].count_like);
+          console.log('end');
+          return newPost;
+        });
+      } else {
+        // await api.post('/like/' + postId);
+        // const newPost = [...posts];
+        // const index = newPost.findIndex(p => p.id === postId);
+        // newPost[index].current_user_liked = true;
+        // newPost[index].count_like += 1;
+        // setPosts(newPost);
+
+        setPosts(prev => {
+          console.log('start');
+          const newPost = [...prev];
+          const index = prev.findIndex(p => p.id === postId);
+          newPost[index].current_user_liked = true;
+          console.log('newPost[index].count_like ', newPost[index].count_like);
+          newPost[index].count_like += 1;
+          console.log('newPost[index].count_like ', newPost[index].count_like);
+          console.log('end');
+          return newPost;
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: 'Error',
+        description: error?.response?.data?.message,
+        status: 'error',
+        duration: 1000,
+        isClosable: true,
+      });
+    }
+  }, [setPosts]);
+
+  const deletePost = React.useCallback(async id => {
     try {
       await api.delete(`/post/${id}`);
       await setPosts(prev => {
         return prev.filter(post => post.id !== id);
       });
-       toast({
+      toast({
         title: 'Success',
         description: 'Deleted post ',
         status: 'success',
@@ -82,8 +100,9 @@ function NewsFeed() {
         isClosable: true,
       });
     }
-  };
+  }, []);
 
+  console.log('render call');
   return (
     <>
       <HeaderBar isHomePage={true} />
@@ -94,13 +113,12 @@ function NewsFeed() {
               key={index}
               {...post}
               deletePost={deletePost}
-              // toggleLike={toggleLike}
-              setPosts={setPosts}
+              toggleLike={toggleLike}
+              
             />
           ))}
         </VStack>
       </Container>
-       
     </>
   );
 }

@@ -9,9 +9,6 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { Layout } from '.';
-import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../redux/actions/authActions';
-
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/auth';
 
